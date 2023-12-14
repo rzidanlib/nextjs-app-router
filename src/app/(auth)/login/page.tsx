@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function LoginPage() {
+export default function LoginPage({ searchParams }: any) {
   const { push } = useRouter();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const callbackUrl = searchParams.callback || "/";
   const handleLogin = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
@@ -18,12 +19,12 @@ export default function LoginPage() {
         redirect: false,
         email: e.target.email.value,
         password: e.target.password.value,
-        callbackUrl: "/dashboard",
+        callbackUrl,
       });
       if (!res?.error) {
         e.target.reset();
         setIsLoading(false);
-        push("/dashboard");
+        push(callbackUrl);
       } else {
         setIsLoading(false);
         if (res.status === 401) {
@@ -89,6 +90,15 @@ export default function LoginPage() {
                   className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
                   {isLoading ? "Loading ..." : "Login to your account"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    signIn("google", { callbackUrl, redirect: false })
+                  }
+                  className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                >
+                  Login With Google
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don’t have an account yet?{" "}

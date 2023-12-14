@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 
@@ -9,7 +9,6 @@ export default function Navbar() {
   const { data: session, status }: { data: any; status: string } = useSession();
 
   const pathname = usePathname();
-  const router = useRouter();
 
   return (
     <nav className="flex bg-gray-800 py-2 px-8 justify-between">
